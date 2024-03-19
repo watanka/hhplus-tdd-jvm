@@ -6,6 +6,7 @@ import io.hhplus.tdd.error.NotEnoughPointError;
 import io.hhplus.tdd.service.PointService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,9 +17,12 @@ public class PointController {
 
     private static final Logger log = LoggerFactory.getLogger(PointController.class);
 
-    PointHistoryTable pointHistoryTable = new PointHistoryTable();
-    UserPointTable userPointTable = new UserPointTable();
-    PointService pointService = new PointService(pointHistoryTable, userPointTable);
+    private final PointService pointService;
+
+    @Autowired
+    public PointController(PointService pointService){
+        this.pointService = pointService;
+    }
 
     /**
      * TODO - 특정 유저의 포인트를 조회하는 기능을 작성해주세요.

@@ -9,10 +9,12 @@ import io.hhplus.tdd.point.UserPoint;
 
 import java.util.List;
 
+@Service
 public class PointService {
     private final PointHistoryTable pointHistoryTable;
     private final UserPointTable userPointTable;
 
+    @Autowired
     public PointService(PointHistoryTable pointHistoryTable, UserPointTable userPointTable) {
         this.pointHistoryTable = pointHistoryTable;
         this.userPointTable = userPointTable;
