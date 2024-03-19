@@ -6,6 +6,8 @@ import io.hhplus.tdd.error.NotEnoughPointError;
 import io.hhplus.tdd.point.PointHistory;
 import io.hhplus.tdd.point.TransactionType;
 import io.hhplus.tdd.point.UserPoint;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -23,9 +25,9 @@ public class PointService {
     public UserPoint charge(long userId, long amount){
         // userPoint 목록 조회 -> Point update -> history 추가
         UserPoint userPoint = userPointTable.selectById(userId);
-        UserPoint updateUserPoint = userPointTable.insertOrUpdate(userPoint.id(), userPoint.point() + amount);
-        PointHistory pointHistory = pointHistoryTable.insert(userId, amount, TransactionType.CHARGE, System.currentTimeMillis());
-        return updateUserPoint;
+        // 히스토리 테이블에 기록
+        pointHistoryTable.insert(userId, amount, TransactionType.CHARGE, System.currentTimeMillis());
+        return userPointTable.insertOrUpdate(userPoint.id(), userPoint.point() + amount);
     }
 
 
@@ -40,10 +42,9 @@ public class PointService {
         if (pointLeft < 0){
             throw new NotEnoughPointError("포인트가 부족합니다.");
         }
-
-        UserPoint updateUserPoint = userPointTable.insertOrUpdate(userPoint.id(), pointLeft);
-        PointHistory pointHistory = pointHistoryTable.insert(userId, amount, TransactionType.USE, System.currentTimeMillis());
-        return updateUserPoint;
+        // 히스토리 테이블에 기록
+        pointHistoryTable.insert(userId, amount, TransactionType.USE, System.currentTimeMillis());
+        return userPointTable.insertOrUpdate(userPoint.id(), pointLeft);
     }
 
     public List<PointHistory> getHistory(long id) {

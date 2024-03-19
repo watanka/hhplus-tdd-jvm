@@ -8,6 +8,7 @@ import io.hhplus.tdd.point.UserPoint;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.util.List;
 
@@ -20,6 +21,14 @@ class PointServiceTest {
     UserPointTable userPointTable;
     PointService pointService;
 
+    PointServiceTest(){
+        this.userPointTable = new UserPointTable();
+        this.pointHistoryTable = new PointHistoryTable();
+        this.pointService = new PointService(pointHistoryTable, userPointTable);
+    }
+
+
+
     @BeforeEach
     void beforeEach(){
         pointHistoryTable = new PointHistoryTable();
@@ -28,13 +37,27 @@ class PointServiceTest {
         pointService = new PointService(pointHistoryTable, userPointTable);
     }
 
+    // charge 함수
+    // 요구사항 분석
+    // - 유저의 돈을 조회
+    // - 유저 돈이랑 입력값이랑 더함
+    // - 유저 돈 저장 후 반환
     @Test
     void 포인트_충전(){
         //given. 유저 포인트 초기화
-        UserPoint userPoint = userPointTable.insertOrUpdate(1, 3000);
+        long userId = 1L;
+        long pointAmount1 = 5000L;
+        long pointAmount2 = 7000L;
+        long pointAmount3 = 9000L;
 
-        UserPoint updateUserPoint = pointService.charge(userPoint.id(), 2000);
-        assertThat(updateUserPoint.point()).isEqualTo(3000 + 2000);
+
+        pointService.charge(userId, pointAmount1);
+        pointService.charge(userId, pointAmount2);
+        UserPoint updateUserPoint = pointService.charge(userId, pointAmount3);
+
+        // 검증
+        assertThat(updateUserPoint.id()).isEqualTo(userId);
+        assertThat(updateUserPoint.point()).isEqualTo(pointAmount1 + pointAmount2 + pointAmount3);
     }
 
     @Test
