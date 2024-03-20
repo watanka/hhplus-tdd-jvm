@@ -1,14 +1,18 @@
 package io.hhplus.tdd.service;
 
+import io.hhplus.tdd.database.PointHistoryDB;
 import io.hhplus.tdd.database.PointHistoryTable;
+import io.hhplus.tdd.database.UserPointDB;
 import io.hhplus.tdd.database.UserPointTable;
-import io.hhplus.tdd.error.NotEnoughPointError;
-import io.hhplus.tdd.point.PointHistory;
-import io.hhplus.tdd.point.UserPoint;
+import io.hhplus.tdd.domain.PointHistoryRepository;
+import io.hhplus.tdd.domain.UserPointRepository;
+import io.hhplus.tdd.domain.error.NotEnoughPointError;
+import io.hhplus.tdd.domain.point.PointHistory;
+import io.hhplus.tdd.domain.point.UserPoint;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -17,24 +21,31 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PointServiceTest {
 
-    PointHistoryTable pointHistoryTable;
-    UserPointTable userPointTable;
+
+    // 질문: Interface로 DB(?데이터 처리하는부분)을 감쌌기 때문에 mock을 따로 안둬도 된다?
+    PointHistoryRepository pointHistoryRepository;
+    UserPointRepository userPointRepository;
     PointService pointService;
 
+    PointHistoryDB pointHistoryDB = new PointHistoryTable();
+    UserPointDB userPointDB = new UserPointTable();
+
+
+
     PointServiceTest(){
-        this.userPointTable = new UserPointTable();
-        this.pointHistoryTable = new PointHistoryTable();
-        this.pointService = new PointService(pointHistoryTable, userPointTable);
+        this.pointHistoryRepository = new PointHistoryRepository(pointHistoryDB);
+        this.userPointRepository = new UserPointRepository(userPointDB);
+        this.pointService = new PointService(pointHistoryRepository, userPointRepository);
     }
 
 
 
     @BeforeEach
     void beforeEach(){
-        pointHistoryTable = new PointHistoryTable();
-        userPointTable = new UserPointTable();
+        pointHistoryRepository = new PointHistoryRepository(pointHistoryDB);
+        userPointRepository = new UserPointRepository(userPointDB);
 
-        pointService = new PointService(pointHistoryTable, userPointTable);
+        pointService = new PointService(pointHistoryRepository, userPointRepository);
     }
 
     // charge 함수
@@ -62,7 +73,7 @@ class PointServiceTest {
 
     @Test
     void 포인트_사용() {
-        UserPoint userPoint = userPointTable.insertOrUpdate(1, 3000);
+        UserPoint userPoint = userPointRepository.insertOrUpdate(1, 3000);
 
         UserPoint updateUserPoint = pointService.use(userPoint.id(), 2000);
         assertThat(updateUserPoint.point()).isEqualTo(3000 - 2000);
@@ -70,7 +81,7 @@ class PointServiceTest {
 
     @Test
     void 포인트_사용실패(){
-        UserPoint userPoint = userPointTable.insertOrUpdate(1, 3000);
+        UserPoint userPoint = userPointRepository.insertOrUpdate(1, 3000);
 
         assertThrows(NotEnoughPointError.class, () -> pointService.use(userPoint.id(), 4000)) ;
 
@@ -78,7 +89,7 @@ class PointServiceTest {
 
     @Test
     void 사용자포인트조회() {
-        UserPoint userPoint = userPointTable.insertOrUpdate(1, 3000);
+        UserPoint userPoint = userPointRepository.insertOrUpdate(1, 3000);
         UserPoint selectedUserPoint = pointService.getUserPointById(userPoint.id());
 
         assertThat(selectedUserPoint).isEqualTo(userPoint);
@@ -88,13 +99,13 @@ class PointServiceTest {
     @Test
     void 포인트내역조회() {
 
-        pointService.charge(1, 3000);
-        pointService.use(1, 1000);
-        pointService.charge(1, 2000);
+        pointService.charge(1, 3000L);
+        pointService.use(1, 1000L);
+        pointService.charge(1, 2000L);
 
-        List<PointHistory> historyTableResult = pointHistoryTable.selectAllByUserId(1);
+        List<PointHistory> historyTableResult = pointHistoryRepository.getAllbyId(1L);
 
-        List<PointHistory> serviceHistoryResult = pointService.getHistory(1);
+        List<PointHistory> serviceHistoryResult = pointService.getHistory(1L);
         
         assertThat(serviceHistoryResult).isEqualTo(historyTableResult);
         
