@@ -3,9 +3,11 @@ package io.hhplus.tdd.domain;
 import io.hhplus.tdd.database.PointHistoryDB;
 import io.hhplus.tdd.domain.point.PointHistory;
 import io.hhplus.tdd.domain.point.TransactionType;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class PointHistoryRepository { // Repository는 더이상 DB의 세부사항에 대해 몰라도 된다.
 
     private final PointHistoryDB pointHistoryDB;

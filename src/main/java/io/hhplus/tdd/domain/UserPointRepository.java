@@ -2,7 +2,9 @@ package io.hhplus.tdd.domain;
 
 import io.hhplus.tdd.database.UserPointDB;
 import io.hhplus.tdd.domain.point.UserPoint;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class UserPointRepository {
 
     private final UserPointDB userPointDB;
