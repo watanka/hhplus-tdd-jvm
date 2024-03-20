@@ -21,6 +21,8 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class PointControllerTest {
+    // 꼭 MockMvc를 사용해야하는지?
+    // 직접 다 구현한 느낌인데, mock을 사용한다면 어떤 부분이 빨라질까 고민해보자
 
     @Autowired
     private PointController pointController;
