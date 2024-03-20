@@ -12,8 +12,6 @@ class PointHistoryTableTest {
 
 
     private PointHistoryTable pointHistoryTable = new PointHistoryTable();
-    private UserPointTable userPointTable = new UserPointTable();
-    private PointService pointService = new PointService(pointHistoryTable, userPointTable);
 
 
 
@@ -24,4 +22,3 @@ class PointHistoryTableTest {
     @Test
     void selectAllByUserId() {}
 }
-
