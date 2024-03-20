@@ -52,6 +52,26 @@ class PointControllerTest {
     @Test
     @DisplayName("포인트 사용기록 조회 테스트")
     void history() {
+        long userId = 1L;
+        long amountCharge = 5000;
+        long amountUsed = 3000;
+
+        //given: 포인트 충전/사용 기록 발생
+        PointHistory chargeHistory = pointService.recordHistory(userId, amountCharge, TransactionType.CHARGE);
+        PointHistory useHistory = pointService.recordHistory(userId, amountUsed, TransactionType.USE);
+
+        List<PointHistory> historyList = new ArrayList<>();
+        historyList.add(chargeHistory);
+        historyList.add(useHistory);
+
+
+        when(pointService.getHistory(userId)).thenReturn(historyList);
+
+        //when: history api 요청
+        List<PointHistory> pointHistory = pointController.history(userId);
+        //then
+        assertThat(pointHistory.size()).isEqualTo(2);
+
     }
 
     @Test
@@ -62,5 +82,20 @@ class PointControllerTest {
     @Test
     @DisplayName("포인트 사용 테스트")
     void use() {
+        //given: 기존 포인트 3000에 2000포인트 사용
+        long userId = 1L;
+        long originalAmount = 3000L;
+        long useAmount = 2000L;
+
+        UserPoint userPoint = new UserPoint(userId, originalAmount - useAmount, System.currentTimeMillis());
+
+        when(pointService.use(userId, useAmount)).thenReturn(userPoint);
+
+        //when: controller에 포인트 2000원 사용 요청
+        Long point = pointController.charge(userId, useAmount).point();
+
+        //then: 1000포인트 리턴
+        assertThat(point)
+                .isEqualTo(originalAmount - useAmount);
     }
 }
