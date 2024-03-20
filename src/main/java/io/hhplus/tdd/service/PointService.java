@@ -22,11 +22,15 @@ public class PointService {
         this.userPointTable = userPointTable;
     }
 
+    public PointHistory recordHistory(long userId, long amount, TransactionType type){
+        return pointHistoryTable.insert(userId, amount, type, System.currentTimeMillis());
+    }
+
     public UserPoint charge(long userId, long amount){
         // userPoint 목록 조회 -> Point update -> history 추가
         UserPoint userPoint = userPointTable.selectById(userId);
         // 히스토리 테이블에 기록
-        pointHistoryTable.insert(userId, amount, TransactionType.CHARGE, System.currentTimeMillis());
+        recordHistory(userId, amount, TransactionType.CHARGE);
         return userPointTable.insertOrUpdate(userPoint.id(), userPoint.point() + amount);
     }
 
@@ -41,6 +45,7 @@ public class PointService {
         long pointLeft = userPoint.point() - amount;
         if (pointLeft < 0){
             throw new NotEnoughPointError("포인트가 부족합니다.");
+
         }
         // 히스토리 테이블에 기록
         pointHistoryTable.insert(userId, amount, TransactionType.USE, System.currentTimeMillis());

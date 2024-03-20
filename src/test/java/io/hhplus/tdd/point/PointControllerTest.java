@@ -10,7 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -33,7 +38,7 @@ class PointControllerTest {
         // 이부분이 맞는 코드인지 모르겠다. 이렇게 조건을 셋팅하는 게 맞는지?
         when(pointService.getUserPointById(userId)).thenReturn(userPoint);
 
-        //when: 유지 1의 포인트 조회
+        //when: cnntroller 유지 1의 포인트 조회
         UserPoint result = pointController.point(1);
 
         //then: 유저 1의 포인트 리턴
