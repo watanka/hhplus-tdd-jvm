@@ -2,6 +2,7 @@ package io.hhplus.tdd.point;
 
 import io.hhplus.tdd.service.PointService;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,13 @@ class PointControllerTest {
     @Autowired
     private PointController pointController;
 
+    @Autowired
     @MockBean
     private PointService pointService;
 
     @Test
-    void 포인트_조회() {
+    @DisplayName("포인트 조회 테스트")
+    void point() {
         //given: 3000 포인트를 가진 유저 등록
         long userId = 1L;
         long amount = 3000L;
@@ -47,14 +50,17 @@ class PointControllerTest {
     }
 
     @Test
+    @DisplayName("포인트 사용기록 조회 테스트")
     void history() {
     }
 
     @Test
+    @DisplayName("포인트 충전 테스트")
     void charge() {
     }
 
     @Test
+    @DisplayName("포인트 사용 테스트")
     void use() {
     }
 }
