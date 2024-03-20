@@ -27,10 +27,19 @@ class PointControllerTest {
     @Autowired
     private PointController pointController;
 
-    @Autowired
-    @MockBean
     private PointService pointService;
+    private UserPointRepository userPointRepository;
+    private PointHistoryRepository pointHistoryRepository;
 
+    @BeforeEach
+    void setUp(){
+        PointHistoryDB pointHistoryDB = new PointHistoryTable();
+        UserPointDB userPointDB = new UserPointTable();
+
+        this.userPointRepository = new UserPointRepository(userPointDB);
+        this.pointHistoryRepository = new PointHistoryRepository(pointHistoryDB);
+        this.pointService = new PointService(pointHistoryRepository, userPointRepository);
+    }
 
 
     @Test
