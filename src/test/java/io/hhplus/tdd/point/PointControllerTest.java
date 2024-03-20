@@ -1,5 +1,6 @@
 package io.hhplus.tdd.point;
 
+import io.hhplus.tdd.error.NotEnoughPointError;
 import io.hhplus.tdd.service.PointService;
 
 import org.junit.jupiter.api.DisplayName;
@@ -29,6 +30,8 @@ class PointControllerTest {
     @MockBean
     private PointService pointService;
 
+
+
     @Test
     @DisplayName("포인트 조회 테스트")
     void point() {
@@ -45,8 +48,8 @@ class PointControllerTest {
         UserPoint result = pointController.point(1);
 
         //then: 유저 1의 포인트 리턴
-        assertEquals(userId, result.id());
-        assertEquals(amount, result.point());
+        assertThat(userId).isEqualTo(result.id());
+        assertThat(amount).isEqualTo(result.point());
     }
 
     @Test
@@ -97,5 +100,27 @@ class PointControllerTest {
         //then: 1000포인트 리턴
         assertThat(point)
                 .isEqualTo(originalAmount - useAmount);
+    }
+
+    @Test
+    @DisplayName("포인트 사용 실패 테스트")
+    void use_fail() {
+        //given: 기존 포인트 3000에 4000포인트 사용
+        long userId = 1L;
+        long originalAmount = 3000L;
+        long useAmount = 4000L;
+
+        UserPoint userPoint = new UserPoint(userId, originalAmount - useAmount, System.currentTimeMillis());
+
+        //when: controller에 초과 포인트 사용 요청
+        when(pointService.use(userId, useAmount)).thenThrow(NotEnoughPointError.class);
+
+
+
+        //then: NotEnoughPointError 발생
+        assertThatThrownBy(() ->
+                pointController.use(userId, useAmount)).isInstanceOf(NotEnoughPointError.class);
+
+
     }
 }
