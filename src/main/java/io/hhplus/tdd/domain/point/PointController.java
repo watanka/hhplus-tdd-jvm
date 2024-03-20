@@ -1,8 +1,6 @@
-package io.hhplus.tdd.point;
+package io.hhplus.tdd.domain.point;
 
-import io.hhplus.tdd.database.PointHistoryTable;
-import io.hhplus.tdd.database.UserPointTable;
-import io.hhplus.tdd.error.NotEnoughPointError;
+import io.hhplus.tdd.domain.error.NotEnoughPointError;
 import io.hhplus.tdd.service.PointService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

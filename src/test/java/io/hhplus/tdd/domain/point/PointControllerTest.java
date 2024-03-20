@@ -1,6 +1,6 @@
-package io.hhplus.tdd.point;
+package io.hhplus.tdd.domain.point;
 
-import io.hhplus.tdd.error.NotEnoughPointError;
+import io.hhplus.tdd.domain.error.NotEnoughPointError;
 import io.hhplus.tdd.service.PointService;
 
 import org.junit.jupiter.api.DisplayName;
@@ -12,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +43,7 @@ class PointControllerTest {
         // 이부분이 맞는 코드인지 모르겠다. 이렇게 조건을 셋팅하는 게 맞는지?
         when(pointService.getUserPointById(userId)).thenReturn(userPoint);
 
-        //when: cnntroller 유지 1의 포인트 조회
+        //when: controller 유지 1의 포인트 조회
         UserPoint result = pointController.point(1);
 
         //then: 유저 1의 포인트 리턴
