@@ -80,6 +80,21 @@ class PointControllerTest {
     @Test
     @DisplayName("포인트 충전 테스트")
     void charge() {
+        //given: 기존 포인트 3000에 2000포인트 추가
+        long userId = 1L;
+        long originalAmount = 3000;
+        long chargeAmount = 2000;
+
+        UserPoint userPoint = new UserPoint(userId, originalAmount + chargeAmount, System.currentTimeMillis());
+
+        when(pointService.charge(userId, chargeAmount)).thenReturn(userPoint);
+
+        //when: controller에 포인트 2000원 추가 요청
+        Long point = pointController.charge(userId, chargeAmount).point();
+
+        //then: 5000포인트 리턴
+        assertThat(point)
+                .isEqualTo(originalAmount + chargeAmount);
     }
 
     @Test
