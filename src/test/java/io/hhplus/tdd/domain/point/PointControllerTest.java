@@ -51,10 +51,12 @@ class PointControllerTest {
 
 
         UserPoint userPoint = new UserPoint(userId, amount, System.currentTimeMillis());
-        // 이부분이 맞는 코드인지 모르겠다. 이렇게 조건을 셋팅하는 게 맞는지?
-        when(pointService.getUserPointById(userId)).thenReturn(userPoint);
+        // 이부분이 맞는 코드인지 모르겠다. 이렇게 조건을 셋팅하는 게 맞는지? -> 틀리다. 이렇게 service를 mock하면 틀릴 수 없는 테스트 코드다.
+//        when(userPointRepository.selectById(userId)).thenReturn(userPoint);
 
         //when: controller 유지 1의 포인트 조회
+        pointController.charge(userId, amount);
+
         UserPoint result = pointController.point(1);
 
         //then: 유저 1의 포인트 리턴
@@ -95,9 +97,7 @@ class PointControllerTest {
         long originalAmount = 3000;
         long chargeAmount = 2000;
 
-        UserPoint userPoint = new UserPoint(userId, originalAmount + chargeAmount, System.currentTimeMillis());
-
-        when(pointService.charge(userId, chargeAmount)).thenReturn(userPoint);
+        pointController.charge(userId, originalAmount);
 
         //when: controller에 포인트 2000원 추가 요청
         Long point = pointController.charge(userId, chargeAmount).point();
@@ -115,12 +115,12 @@ class PointControllerTest {
         long originalAmount = 3000L;
         long useAmount = 2000L;
 
-        UserPoint userPoint = new UserPoint(userId, originalAmount - useAmount, System.currentTimeMillis());
+        pointController.charge(userId, originalAmount);
 
-        when(pointService.use(userId, useAmount)).thenReturn(userPoint);
+//        when(userPointRepository.selectById(userId)).thenReturn(userPoint);
 
         //when: controller에 포인트 2000원 사용 요청
-        Long point = pointController.charge(userId, useAmount).point();
+        Long point = pointController.use(userId, useAmount).point();
 
         //then: 1000포인트 리턴
         assertThat(point)
@@ -135,16 +135,17 @@ class PointControllerTest {
         long originalAmount = 3000L;
         long useAmount = 4000L;
 
-        UserPoint userPoint = new UserPoint(userId, originalAmount - useAmount, System.currentTimeMillis());
+        pointController.charge(userId, originalAmount);
 
         //when: controller에 초과 포인트 사용 요청
-        when(pointService.use(userId, useAmount)).thenThrow(NotEnoughPointError.class);
+//        when(userPointRepository.selectById(userId)).thenThrow(NotEnoughPointError.class);
+
 
 
 
         //then: NotEnoughPointError 발생
         assertThatThrownBy(() ->
-                pointController.use(userId, useAmount)).isInstanceOf(NotEnoughPointError.class);
+                pointController.use(userId, useAmount)).isInstanceOf(NotEnoughPointError.class); // 맞을 수밖에 없는 코드 -> 좋지 않음.
 
 
     }
