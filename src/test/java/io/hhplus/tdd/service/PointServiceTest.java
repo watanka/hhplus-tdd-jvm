@@ -1,12 +1,9 @@
 package io.hhplus.tdd.service;
 
-import io.hhplus.tdd.database.PointHistoryDB;
-import io.hhplus.tdd.database.PointHistoryTable;
-import io.hhplus.tdd.database.UserPointDB;
-import io.hhplus.tdd.database.UserPointTable;
-import io.hhplus.tdd.domain.PointHistoryRepository;
-import io.hhplus.tdd.domain.UserPointRepository;
-import io.hhplus.tdd.domain.error.NotEnoughPointError;
+import io.hhplus.tdd.database.MemoryPointHistoryRepository;
+import io.hhplus.tdd.database.MemoryUserPointRepository;
+import io.hhplus.tdd.database.PointHistoryRepository;
+import io.hhplus.tdd.database.UserPointRepository;
 import io.hhplus.tdd.domain.point.PointHistory;
 import io.hhplus.tdd.domain.point.UserPoint;
 
@@ -22,18 +19,16 @@ class PointServiceTest {
 
 
     // 질문: Interface로 DB(?데이터 처리하는부분)을 감쌌기 때문에 mock을 따로 안둬도 된다?
-    PointHistoryRepository pointHistoryRepository;
-    UserPointRepository userPointRepository;
     PointService pointService;
 
-    PointHistoryDB pointHistoryDB = new PointHistoryTable();
-    UserPointDB userPointDB = new UserPointTable();
+    PointHistoryRepository pointHistoryRepository = new MemoryPointHistoryRepository();
+    UserPointRepository userPointRepository = new MemoryUserPointRepository();
 
 
 
     PointServiceTest(){
-        this.pointHistoryRepository = new PointHistoryRepository(pointHistoryDB);
-        this.userPointRepository = new UserPointRepository(userPointDB);
+        this.pointHistoryRepository = new MemoryPointHistoryRepository();
+        this.userPointRepository = new MemoryUserPointRepository();
         this.pointService = new PointService(pointHistoryRepository, userPointRepository);
     }
 

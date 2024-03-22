@@ -1,16 +1,18 @@
 package io.hhplus.tdd.domain.point;
 
-import io.hhplus.tdd.domain.error.NotEnoughPointError;
+import io.hhplus.tdd.database.MemoryPointHistoryRepository;
+import io.hhplus.tdd.database.MemoryUserPointRepository;
+import io.hhplus.tdd.database.PointHistoryRepository;
+import io.hhplus.tdd.database.UserPointRepository;
 import io.hhplus.tdd.service.PointService;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +35,9 @@ class PointControllerTest {
 
     @BeforeEach
     void setUp(){
-        PointHistoryDB pointHistoryDB = new PointHistoryTable();
-        UserPointDB userPointDB = new UserPointTable();
-
-        this.userPointRepository = new UserPointRepository(userPointDB);
-        this.pointHistoryRepository = new PointHistoryRepository(pointHistoryDB);
-        this.pointService = new PointService(pointHistoryRepository, userPointRepository);
+        this.userPointRepository = new MemoryUserPointRepository();
+        this.pointHistoryRepository = new MemoryPointHistoryRepository();
+        this.pointService = new PointService(this.pointHistoryRepository, this.userPointRepository);
     }
 
 
@@ -52,7 +51,6 @@ class PointControllerTest {
 
         UserPoint userPoint = new UserPoint(userId, amount, System.currentTimeMillis());
         // 이부분이 맞는 코드인지 모르겠다. 이렇게 조건을 셋팅하는 게 맞는지? -> 틀리다. 이렇게 service를 mock하면 틀릴 수 없는 테스트 코드다.
-//        when(userPointRepository.selectById(userId)).thenReturn(userPoint);
 
         //when: controller 유지 1의 포인트 조회
         pointController.charge(userId, amount);
@@ -117,8 +115,6 @@ class PointControllerTest {
 
         pointController.charge(userId, originalAmount);
 
-//        when(userPointRepository.selectById(userId)).thenReturn(userPoint);
-
         //when: controller에 포인트 2000원 사용 요청
         Long point = pointController.use(userId, useAmount).point();
 
@@ -139,8 +135,6 @@ class PointControllerTest {
 
         //when: controller에 초과 포인트 사용 요청
 //        when(userPointRepository.selectById(userId)).thenThrow(NotEnoughPointError.class);
-
-
 
 
         //then: NotEnoughPointError 발생

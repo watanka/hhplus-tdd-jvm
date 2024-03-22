@@ -1,7 +1,7 @@
 package io.hhplus.tdd.service;
 
-import io.hhplus.tdd.domain.PointHistoryRepository;
-import io.hhplus.tdd.domain.UserPointRepository;
+import io.hhplus.tdd.database.PointHistoryRepository;
+import io.hhplus.tdd.database.UserPointRepository;
 import io.hhplus.tdd.domain.error.NotEnoughPointError;
 import io.hhplus.tdd.domain.point.PointHistory;
 import io.hhplus.tdd.domain.point.TransactionType;
@@ -23,7 +23,7 @@ public class PointService {
     }
 
     public PointHistory recordHistory(long userId, long amount, TransactionType type){
-        return pointHistoryRepository.add(userId, amount, type, System.currentTimeMillis());
+        return pointHistoryRepository.insert(userId, amount, type, System.currentTimeMillis());
     }
 
     public UserPoint charge(long userId, long amount){
