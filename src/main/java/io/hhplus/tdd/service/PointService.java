@@ -53,7 +53,7 @@ public class PointService {
     }
 
     public List<PointHistory> getHistory(long id) {
-        return pointHistoryRepository.getAllbyId(id);
+        return pointHistoryRepository.selectAllByUserId(id);
     }
 
 

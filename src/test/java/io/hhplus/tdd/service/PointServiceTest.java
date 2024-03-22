@@ -41,8 +41,8 @@ class PointServiceTest {
 
     @BeforeEach
     void beforeEach(){
-        pointHistoryRepository = new PointHistoryRepository(pointHistoryDB);
-        userPointRepository = new UserPointRepository(userPointDB);
+        pointHistoryRepository = new MemoryPointHistoryRepository();
+        userPointRepository = new MemoryUserPointRepository();
 
         pointService = new PointService(pointHistoryRepository, userPointRepository);
     }
