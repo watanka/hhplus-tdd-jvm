@@ -39,12 +39,12 @@ public class PointService {
         return userPointRepository.selectById(id);
     }
 
-    public UserPoint use(long userId, long amount) throws NotEnoughPointError {
+    public UserPoint use(long userId, long amount) throws IllegalStateException {
         // userPoint 목록 조회 -> Point update -> history 추가
         UserPoint userPoint = userPointRepository.selectById(userId);
         long pointLeft = userPoint.point() - amount;
         if (pointLeft < 0){
-            throw new NotEnoughPointError("포인트가 부족합니다.");
+            throw new IllegalStateException("포인트가 부족합니다.");
 
         }
         // 히스토리 테이블에 기록
