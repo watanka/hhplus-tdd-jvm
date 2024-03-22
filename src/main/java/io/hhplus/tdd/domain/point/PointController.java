@@ -1,6 +1,5 @@
 package io.hhplus.tdd.domain.point;
 
-import io.hhplus.tdd.domain.error.NotEnoughPointError;
 import io.hhplus.tdd.service.PointService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +59,7 @@ public class PointController {
     public UserPoint use(
             @PathVariable long id,
             @RequestBody long amount
-    ) throws NotEnoughPointError {
+    ) throws IllegalStateException {
         return pointService.use(id, amount);
     }
 }

@@ -12,7 +12,6 @@ import io.hhplus.tdd.domain.point.UserPoint;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import java.util.List;
 
@@ -83,7 +82,7 @@ class PointServiceTest {
     void 포인트_사용실패(){
         UserPoint userPoint = userPointRepository.insertOrUpdate(1, 3000);
 
-        assertThrows(NotEnoughPointError.class, () -> pointService.use(userPoint.id(), 4000)) ;
+        assertThrows(IllegalStateException.class, () -> pointService.use(userPoint.id(), 4000)) ;
 
     }
 
@@ -103,7 +102,7 @@ class PointServiceTest {
         pointService.use(1, 1000L);
         pointService.charge(1, 2000L);
 
-        List<PointHistory> historyTableResult = pointHistoryRepository.getAllbyId(1L);
+        List<PointHistory> historyTableResult = pointHistoryRepository.selectAllByUserId(1L);
 
         List<PointHistory> serviceHistoryResult = pointService.getHistory(1L);
         
