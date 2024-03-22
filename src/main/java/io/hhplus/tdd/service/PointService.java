@@ -48,7 +48,7 @@ public class PointService {
 
         }
         // 히스토리 테이블에 기록
-        pointHistoryRepository.add(userId, amount, TransactionType.USE, System.currentTimeMillis());
+        pointHistoryRepository.insert(userId, amount, TransactionType.USE, System.currentTimeMillis());
         return userPointRepository.insertOrUpdate(userPoint.id(), pointLeft);
     }
 

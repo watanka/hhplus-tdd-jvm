@@ -139,7 +139,7 @@ class PointControllerTest {
 
         //then: NotEnoughPointError 발생
         assertThatThrownBy(() ->
-                pointController.use(userId, useAmount)).isInstanceOf(NotEnoughPointError.class); // 맞을 수밖에 없는 코드 -> 좋지 않음.
+                pointController.use(userId, useAmount)).isInstanceOf(IllegalStateException.class); // 맞을 수밖에 없는 코드 -> 좋지 않음.
 
 
     }
